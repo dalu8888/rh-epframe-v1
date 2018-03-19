@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="rh-common:war">
+    <output-path>$PROJECT_DIR$/rh-common/target</output-path>
+    <root id="archive" name="rh-common-1.0.0.war">
+      <element id="artifact" artifact-name="rh-common:war exploded" />
+    </root>
+  </artifact>
+</component>
