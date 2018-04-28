@@ -70,9 +70,9 @@ public class DataFilterAspect {
             tableAlias +=  ".";
         }
 
-        //用户部门ID列表
+        //部门ID列表
         Set<Long> deptIdList = new HashSet<>();
-        deptIdList.add(user.getDeptId());
+//        deptIdList.add(user.getDeptId());
 
         //用户角色对应的部门ID列表
         List<Long> roleIdList = sysUserRoleService.queryRoleIdList(user.getUserId());
@@ -89,12 +89,24 @@ public class DataFilterAspect {
 
         StringBuilder sqlFilter = new StringBuilder();
         sqlFilter.append(" (");
-        sqlFilter.append(tableAlias).append("dept_id in(").append(StringUtils.join(deptIdList, ",")).append(")");
+//        sqlFilter.append(tableAlias).append("dept_id in(").append(StringUtils.join(deptIdList, ",")).append(")");
+        //v3.2.0修
+        if(deptIdList.size() > 0){
+            sqlFilter.append(tableAlias).append(dataFilter.deptId()).append(" in(").append(StringUtils.join(deptIdList, ",")).append(")");
+        }
+        //new
 
         //没有本部门数据权限，也能查询本人数据
         if(dataFilter.user()){
-            sqlFilter.append(" or ").append(tableAlias).append("user_id=").append(user.getUserId());
+//            sqlFilter.append(" or ").append(tableAlias).append("user_id=").append(user.getUserId());
+            //v3.2.0修
+            if(deptIdList.size() > 0){
+                sqlFilter.append(" or ");
+            }
+            sqlFilter.append(tableAlias).append(dataFilter.userId()).append("=").append(user.getUserId());
+            //new
         }
+
         sqlFilter.append(")");
 
         return sqlFilter.toString();
